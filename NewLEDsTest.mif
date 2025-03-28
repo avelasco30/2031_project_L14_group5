@@ -1,0 +1,16 @@
+WIDTH=16;
+DEPTH=2048;
+
+ADDRESS_RADIX=HEX;
+DATA_RADIX=HEX;
+
+CONTENT BEGIN
+0000: 0805; -- load fkev;
+0001: 9801; -- out newleds
+0002: 0806; -- load fkev2
+0003: 9801; -- out newleds
+0004: 2800; -- 	JUMP 0
+0005: 0BC0; -- fkev: dw &b0000101111000000
+0006: 7C07; -- fkev2: dw &b0111110000000111
+[0007..07FF] : 0000; -- [empty memory]
+END;
