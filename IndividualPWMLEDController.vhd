@@ -31,32 +31,25 @@ end singleledcontroller;
 -- tick:  1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7
 
 architecture a of singleledcontroller is
+    signal total_count  : integer; -- Saved total amount of clock cycles in one PWM period
+    signal on_count     : integer; -- Saved amount of clock cycles where LED is on
+    signal ticks        : integer := 1; -- Counter for clock ticks to determine LED state if counter <= on_count, LED is on, else LED is off
 begin
     process (latch, clock)
-        variable total_count  : integer := 0; -- Saved total amount of clock cycles in one PWM period
-        variable on_count     : integer := 0; -- Saved amount of clock cycles where LED is on
-        variable ticks        : integer := 1; -- Counter for clock ticks to determine LED state if counter <= on_count, LED is on, else LED is off
     begin
         if (latch = '1') then -- latch necessary values
-            total_count := total_cycles; 
-            on_count := input_cycles;
-            ticks := 1; -- Reset the tick counter when latching new values
+            total_count <= total_cycles; 
+            on_count <= input_cycles;
         end if;
 
         if (rising_edge(clock)) then
             -- Increment tick counter
-            if (ticks < total_count) then
-                ticks := ticks + 1;
+            if (ticks > total_count) then
+                ticks <= 1;
             else
-                ticks := 1;  -- Reset ticks when we exceed total count
-            end if;
-
-            -- turn LED on or off based on on_count
-            if (ticks <= on_count) then
-                led_out <= '1';  -- LED is on
-            else
-                led_out <= '0';  -- LED is off
+                ticks <= ticks + 1;
             end if;
         end if;
     end process;
+    led_out <= '1' when (ticks <= on_count) else '0';
 end a;

@@ -5,12 +5,33 @@ ADDRESS_RADIX=HEX;
 DATA_RADIX=HEX;
 
 CONTENT BEGIN
-0000: 0805; -- load fkev;
+0000: 0813; -- load light1
 0001: 9801; -- out newleds
-0002: 0806; -- load fkev2
+0002: 0814; -- load light2
 0003: 9801; -- out newleds
-0004: 2800; -- 	JUMP 0
-0005: 0BC0; -- fkev: dw &b0000101111000000
-0006: 7C07; -- fkev2: dw &b0111110000000111
-[0007..07FF] : 0000; -- [empty memory]
+0004: 0815; -- load light3
+0005: 9801; -- out newleds
+0006: 0816; -- load light4
+0007: 9801; -- out newleds
+0008: 0817; -- load light5
+0009: 9801; -- out newleds
+000A: 0818; -- load light6
+000B: 9801; -- out newleds
+000C: 0819; -- load light7
+000D: 9801; -- out newleds
+000E: 081A; -- load light8
+000F: 9801; -- out newleds
+0010: 081B; -- load light9
+0011: 9801; -- out newleds
+0012: 2800; -- 	JUMP 0
+0013: 0401; -- light1: dw &b0000010000000001
+0014: 0802; -- light2: dw &b0000100000000010
+0015: 1804; -- light3: dw &b0001100000000100
+0016: 2008; -- light4: dw &b0010000000001000
+0017: FE00; -- light5: dw &b1111111000000000
+0018: F900; -- light6: dw &b1111100100000000
+0019: F480; -- light7: dw &b1111010010000000
+001A: 8040; -- light8: dw &b1000000001000000
+001B: 7C20; -- light9: dw &b0111110000100000
+[001C..07FF] : 0000; -- [empty memory]
 END;

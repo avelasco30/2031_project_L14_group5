@@ -1,0 +1,51 @@
+WIDTH=16;
+DEPTH=2048;
+
+ADDRESS_RADIX=HEX;
+DATA_RADIX=HEX;
+
+CONTENT BEGIN
+0000: 0827; -- load erase
+0001: 9801; -- out leds
+0002: 0825; -- load FullOn
+0003: 6001; -- shift 1
+0004: 1025; -- store FullOn
+0005: 9801; -- out leds
+0006: B83F; -- loadi 63
+0007: 1022; -- store count
+0008: 0820; -- load waittime
+0009: 801A; -- call wait
+000A: 0822; -- load count
+000B: 600A; -- shift 10
+000C: 1023; -- store countshifted
+000D: 0828; -- load changebit
+000E: 5023; -- or countshifted
+000F: 9801; -- out LEDs
+0010: 0822; -- load count
+0011: 6FFF; -- addi -1
+0012: 1022; -- store count
+0013: 3808; -- jpos DecreaseLoop
+0014: 0828; -- load changebit
+0015: 6001; -- shift 1
+0016: 1028; -- store changebit
+0017: 2029; -- sub changebitlimter
+0018: 3000; -- jneg MainLoop
+0019: 2819; -- jump endProgram
+001A: 1020; -- store WaitTime
+001B: 9802; -- out Timer
+001C: 9002; -- in Timer
+001D: 2020; -- sub WaitTime
+001E: 301C; -- jneg CheckTimer
+001F: 8800; -- return
+0020: 0002; -- WaitTime: DW 2
+0021: 0000; -- TempDisp: DW 0
+0022: 0000; -- Count: DW 0
+0023: 0000; -- Countshifted: DW 0
+0024: FFFF; -- MaxInt: DW &b1111111111111111
+0025: FFFF; -- FullOn: DW &b1111111111111111
+0026: FC00; -- MaxBrightness: DW &b1111110000000000
+0027: 03FF; -- Erase: DW &b0000001111111111
+0028: 0001; -- changebit: DW &b0000000000000001
+0029: 0400; -- changebitlimter: DW &b0000010000000000
+[002A..07FF] : 0000; -- [empty memory]
+END;
