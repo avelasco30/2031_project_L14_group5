@@ -5,6 +5,8 @@ MainLoop:
 load erase
 out leds
 
+
+
 load FullOn
 shift 1
 store FullOn
@@ -17,10 +19,6 @@ store count
 
 DecreaseLoop:
 
-load waittime
-call wait
-
-
 load count
 shift 10
 store countshifted
@@ -30,6 +28,11 @@ out LEDs
 load count
 addi -1
 store count
+
+load waittime
+call wait
+load count
+
 jpos DecreaseLoop
 
 load changebit
@@ -46,6 +49,8 @@ jump endProgram
 
 
 
+
+
 ;Function to wait accumulator deciseconds
 wait:
 store WaitTime
@@ -56,7 +61,7 @@ in Timer
 sub WaitTime
 jneg CheckTimer
 return
-WaitTime: DW 2
+WaitTime: DW 1
 
 DisplayAC:; Assumes your accumulator has value and stores it
 
