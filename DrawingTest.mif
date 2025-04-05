@@ -1,0 +1,84 @@
+WIDTH=16;
+DEPTH=2048;
+
+ADDRESS_RADIX=HEX;
+DATA_RADIX=HEX;
+
+CONTENT BEGIN
+0000: B800; -- loadi 0
+0001: 103F; -- store onLEDs
+0002: 1040; -- store SelectedLeds
+0003: 1042; -- store selectedBrightness
+0004: 802D; -- call wait
+0005: 8035; -- call DisplayOnLEDs
+0006: 9000; -- in Switches
+0007: 1041; -- store switchState
+0008: 484A; -- and switchMask
+0009: 1040; -- store selectedLEDs
+000A: 0841; -- load switchState
+000B: 4849; -- and drawMask
+000C: 3824; -- jpos drawaction
+000D: 0841; -- load switchState
+000E: 4848; -- and eraseMask
+000F: 3828; -- jpos eraseAction
+0010: 0840; -- load selectedLEDs
+0011: 503F; -- or OnLEDs
+0012: 5847; -- xor minInt
+0013: 6006; -- shift 6
+0014: 6016; -- shift -6
+0015: 9801; -- out LEDs
+0016: 0842; -- load SelectedBrightness
+0017: 1843; -- add deltaBrightness
+0018: 1042; -- store SelectedBrightness
+0019: 401E; -- jzero brightnessZero
+001A: 2046; -- sub MaxBrightness
+001B: 4021; -- jzero brightnessMax
+001C: 803A; -- call DisplaySelectedLEDs
+001D: 2804; -- jump MainLoop
+001E: B801; -- loadi 1
+001F: 1043; -- store deltaBrightness
+0020: 2804; -- jump MainLoop
+0021: BFFF; -- loadi -1
+0022: 1043; -- store deltaBrightness
+0023: 2804; -- jump MainLoop
+0024: 083F; -- load onLeds
+0025: 5040; -- or selectedLeds
+0026: 103F; -- store onLeds
+0027: 2804; -- jump MainLoop
+0028: 0840; -- load SelectedLeds
+0029: 5847; -- xor MinInt
+002A: 483F; -- and OnLEDs
+002B: 103F; -- store OnLEDs
+002C: 2804; -- jump MainLoop
+002D: B800; -- loadi 0
+002E: 1034; -- store countdown
+002F: 0834; -- load countdown
+0030: 6801; -- addi 1
+0031: 1034; -- store countdown
+0032: 382F; -- jpos waitingloop
+0033: 8800; -- return
+0034: 0000; -- countdown: DW 0
+0035: 0846; -- load MaxBrightness
+0036: 600A; -- shift 10
+0037: 503F; -- or OnLEDs
+0038: 9801; -- out LEDs
+0039: 8800; -- return
+003A: 0842; -- load SelectedBrightness
+003B: 600A; -- shift 10
+003C: 5040; -- or selectedLEDs
+003D: 9801; -- out LEDs
+003E: 8800; -- return
+003F: 0000; -- OnLEDs: DW 0
+0040: 0000; -- SelectedLeds: DW 0
+0041: 0000; -- switchState: DW 0
+0042: 0000; -- selectedBrightness: DW 0
+0043: 0001; -- deltaBrightness: DW 1
+0044: 03FF; -- Erase: DW &b0000001111111111
+0045: 7FFF; -- MaxInt: DW &b0111111111111111
+0046: 003F; -- MaxBrightness: DW 63
+0047: FFFF; -- MinInt: DW &b1111111111111111
+0048: 0100; -- EraseMask: DW &b0000000100000000
+0049: 0200; -- DrawMask: DW &b0000001000000000
+004A: 00FF; -- switchMask: DW &b0000000011111111
+[004B..07FF] : 0000; -- [empty memory]
+END;
