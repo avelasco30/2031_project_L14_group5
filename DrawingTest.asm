@@ -1,6 +1,11 @@
+; 1 Dimensional Drawing Test
+; 8 right LEDs for canvas
+; leftmost switch to draw, second leftmost to erase
+; 8 rightmost switches to select which pixel to draw to
+
 Org 0
 
-; clear stuff
+; clear screen and reset necessary mem values
 loadi 0
 store onLEDs
 store SelectedLeds
@@ -10,37 +15,32 @@ store selectedBrightness
 MainLoop:
 
 call wait
-call DisplayOnLEDs
+call DisplayOnLEDs; Display LEDs that are turned on
 
 in Switches
 store switchState
 and switchMask
-store selectedLEDs
+store selectedLEDs; store high 8 rightmost switches as selected
 load switchState
 and drawMask
-jpos drawaction
+jpos drawaction; jump to draw action if draw switch is high
 load switchState
 and eraseMask
-jpos eraseAction
+jpos eraseAction; jump to erase action if erase switch is high
 
 ; Erase what's not selected or on
-load selectedLEDs
-or OnLEDs
-xor minInt
-shift 6
-shift -6
-out LEDs
+call EraseNecessary
 
 
 load SelectedBrightness
-add deltaBrightness
+add deltaBrightness; increment or decrement brightness to get an oscillating brightness
 store SelectedBrightness
 jzero brightnessZero
 sub MaxBrightness
 jzero brightnessMax
 
 
-call DisplaySelectedLEDs
+call DisplaySelectedLEDs; display oscillating brightness on selected LEDs
 jump MainLoop
 
 
@@ -68,16 +68,22 @@ load SelectedLeds
 xor MinInt
 and OnLEDs
 store OnLEDs
+xor minInt
+and erase
+out LEDs ; erase everything but on LEDs
+
+
 jump MainLoop
 
-
+; Functions
+;-----------------------------------------
 ; function to wait, change later to something better or change timer clock source
 wait:
 loadi 0
 store countdown
 waitingloop:
 load countdown
-addi 1
+addi 2
 store countdown
 jpos waitingloop
 return
@@ -100,9 +106,17 @@ or selectedLEDs
 out LEDs
 return
 
+EraseNecessary:
+load selectedLEDs
+or OnLEDs
+xor minInt
+and erase
+out LEDs
+return
 
 
-;---------
+;Constants and variables
+;---------------
 OnLEDs: DW 0
 SelectedLeds: DW 0
 switchState: DW 0

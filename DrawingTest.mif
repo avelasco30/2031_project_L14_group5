@@ -6,79 +6,83 @@ DATA_RADIX=HEX;
 
 CONTENT BEGIN
 0000: B800; -- loadi 0
-0001: 103F; -- store onLEDs
-0002: 1040; -- store SelectedLeds
-0003: 1042; -- store selectedBrightness
-0004: 802D; -- call wait
-0005: 8035; -- call DisplayOnLEDs
+0001: 1043; -- store onLEDs
+0002: 1044; -- store SelectedLeds
+0003: 1046; -- store selectedBrightness
+0004: 802B; -- call wait
+0005: 8033; -- call DisplayOnLEDs; Display LEDs that are turned on
 0006: 9000; -- in Switches
-0007: 1041; -- store switchState
-0008: 484A; -- and switchMask
-0009: 1040; -- store selectedLEDs
-000A: 0841; -- load switchState
-000B: 4849; -- and drawMask
-000C: 3824; -- jpos drawaction
-000D: 0841; -- load switchState
-000E: 4848; -- and eraseMask
-000F: 3828; -- jpos eraseAction
-0010: 0840; -- load selectedLEDs
-0011: 503F; -- or OnLEDs
-0012: 5847; -- xor minInt
-0013: 6006; -- shift 6
-0014: 6016; -- shift -6
-0015: 9801; -- out LEDs
-0016: 0842; -- load SelectedBrightness
-0017: 1843; -- add deltaBrightness
-0018: 1042; -- store SelectedBrightness
-0019: 401E; -- jzero brightnessZero
-001A: 2046; -- sub MaxBrightness
-001B: 4021; -- jzero brightnessMax
-001C: 803A; -- call DisplaySelectedLEDs
-001D: 2804; -- jump MainLoop
-001E: B801; -- loadi 1
-001F: 1043; -- store deltaBrightness
-0020: 2804; -- jump MainLoop
-0021: BFFF; -- loadi -1
-0022: 1043; -- store deltaBrightness
-0023: 2804; -- jump MainLoop
-0024: 083F; -- load onLeds
-0025: 5040; -- or selectedLeds
-0026: 103F; -- store onLeds
-0027: 2804; -- jump MainLoop
-0028: 0840; -- load SelectedLeds
-0029: 5847; -- xor MinInt
-002A: 483F; -- and OnLEDs
-002B: 103F; -- store OnLEDs
-002C: 2804; -- jump MainLoop
-002D: B800; -- loadi 0
-002E: 1034; -- store countdown
-002F: 0834; -- load countdown
-0030: 6801; -- addi 1
-0031: 1034; -- store countdown
-0032: 382F; -- jpos waitingloop
-0033: 8800; -- return
-0034: 0000; -- countdown: DW 0
-0035: 0846; -- load MaxBrightness
-0036: 600A; -- shift 10
-0037: 503F; -- or OnLEDs
-0038: 9801; -- out LEDs
-0039: 8800; -- return
-003A: 0842; -- load SelectedBrightness
-003B: 600A; -- shift 10
-003C: 5040; -- or selectedLEDs
-003D: 9801; -- out LEDs
-003E: 8800; -- return
-003F: 0000; -- OnLEDs: DW 0
-0040: 0000; -- SelectedLeds: DW 0
-0041: 0000; -- switchState: DW 0
-0042: 0000; -- selectedBrightness: DW 0
-0043: 0001; -- deltaBrightness: DW 1
-0044: 03FF; -- Erase: DW &b0000001111111111
-0045: 7FFF; -- MaxInt: DW &b0111111111111111
-0046: 003F; -- MaxBrightness: DW 63
-0047: FFFF; -- MinInt: DW &b1111111111111111
-0048: 0100; -- EraseMask: DW &b0000000100000000
-0049: 0200; -- DrawMask: DW &b0000001000000000
-004A: 00FF; -- switchMask: DW &b0000000011111111
-[004B..07FF] : 0000; -- [empty memory]
+0007: 1045; -- store switchState
+0008: 484E; -- and switchMask
+0009: 1044; -- store selectedLEDs; store high 8 rightmost switches as selected
+000A: 0845; -- load switchState
+000B: 484D; -- and drawMask
+000C: 381F; -- jpos drawaction; jump to draw action if draw switch is high
+000D: 0845; -- load switchState
+000E: 484C; -- and eraseMask
+000F: 3823; -- jpos eraseAction; jump to erase action if erase switch is high
+0010: 803D; -- call EraseNecessary
+0011: 0846; -- load SelectedBrightness
+0012: 1847; -- add deltaBrightness; increment or decrement brightness to get an oscillating brightness
+0013: 1046; -- store SelectedBrightness
+0014: 4019; -- jzero brightnessZero
+0015: 204A; -- sub MaxBrightness
+0016: 401C; -- jzero brightnessMax
+0017: 8038; -- call DisplaySelectedLEDs; display oscillating brightness on selected LEDs
+0018: 2804; -- jump MainLoop
+0019: B801; -- loadi 1
+001A: 1047; -- store deltaBrightness
+001B: 2804; -- jump MainLoop
+001C: BFFF; -- loadi -1
+001D: 1047; -- store deltaBrightness
+001E: 2804; -- jump MainLoop
+001F: 0843; -- load onLeds
+0020: 5044; -- or selectedLeds
+0021: 1043; -- store onLeds
+0022: 2804; -- jump MainLoop
+0023: 0844; -- load SelectedLeds
+0024: 584B; -- xor MinInt
+0025: 4843; -- and OnLEDs
+0026: 1043; -- store OnLEDs
+0027: 584B; -- xor minInt
+0028: 4848; -- and erase
+0029: 9801; -- out LEDs ; erase everything but on LEDs
+002A: 2804; -- jump MainLoop
+002B: B800; -- loadi 0
+002C: 1032; -- store countdown
+002D: 0832; -- load countdown
+002E: 6802; -- addi 2
+002F: 1032; -- store countdown
+0030: 382D; -- jpos waitingloop
+0031: 8800; -- return
+0032: 0000; -- countdown: DW 0
+0033: 084A; -- load MaxBrightness
+0034: 600A; -- shift 10
+0035: 5043; -- or OnLEDs
+0036: 9801; -- out LEDs
+0037: 8800; -- return
+0038: 0846; -- load SelectedBrightness
+0039: 600A; -- shift 10
+003A: 5044; -- or selectedLEDs
+003B: 9801; -- out LEDs
+003C: 8800; -- return
+003D: 0844; -- load selectedLEDs
+003E: 5043; -- or OnLEDs
+003F: 584B; -- xor minInt
+0040: 4848; -- and erase
+0041: 9801; -- out LEDs
+0042: 8800; -- return
+0043: 0000; -- OnLEDs: DW 0
+0044: 0000; -- SelectedLeds: DW 0
+0045: 0000; -- switchState: DW 0
+0046: 0000; -- selectedBrightness: DW 0
+0047: 0001; -- deltaBrightness: DW 1
+0048: 03FF; -- Erase: DW &b0000001111111111
+0049: 7FFF; -- MaxInt: DW &b0111111111111111
+004A: 003F; -- MaxBrightness: DW 63
+004B: FFFF; -- MinInt: DW &b1111111111111111
+004C: 0100; -- EraseMask: DW &b0000000100000000
+004D: 0200; -- DrawMask: DW &b0000001000000000
+004E: 00FF; -- switchMask: DW &b0000000011111111
+[004F..07FF] : 0000; -- [empty memory]
 END;
